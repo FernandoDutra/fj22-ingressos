@@ -150,4 +150,12 @@
         </plugins>
     </build>
 
+	<developers>
+		<developer>
+			<name>Fernando Dutra</name>
+			<email>fernandoalvesdutra@hotmail.com</email>
+		</developer>
+	
+	</developers>
+
 </project>
