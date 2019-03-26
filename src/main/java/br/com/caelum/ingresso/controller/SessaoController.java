@@ -32,8 +32,8 @@ public class SessaoController {
 	private SessaoDao sessaoDao;
 
 	@GetMapping("admin/sessao")
-	public ModelAndView form(@RequestParam("salad") Integer salaId, SessaoForm sessaoForm) {
-		sessaoForm.setSalaID(salaId);
+	public ModelAndView form(@RequestParam("salaId") Integer salaId, SessaoForm sessaoForm) {
+		sessaoForm.setSalaId(salaId);
 
 		ModelAndView mav = new ModelAndView("sessao/sessao");
 
@@ -51,14 +51,14 @@ public class SessaoController {
 	@Transactional
 	public ModelAndView salva(@Valid SessaoForm sessaoForm, BindingResult result) {
 		if (result.hasErrors()) {
-			return form(sessaoForm.getSalaID(), sessaoForm);
+			return form(sessaoForm.getSalaId(), sessaoForm);
 		}
 		
 		Sessao sessao = sessaoForm.toSessao(salaDao, filmeDao);
 		sessaoDao.save(sessao);
 		
 		// vai para a lista de sessões
-		ModelAndView mav = new ModelAndView("redirect:admin/sala/" + sessao.getSala().getId() + "/sessoes/");
+		ModelAndView mav = new ModelAndView("redirect:/admin/sala/" + sessao.getSala().getId() + "/sessoes");
 
 		return mav;
 	}
