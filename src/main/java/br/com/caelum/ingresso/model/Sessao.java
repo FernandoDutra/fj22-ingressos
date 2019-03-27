@@ -1,8 +1,9 @@
 package br.com.caelum.ingresso.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalTime;
 
-import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,16 +20,17 @@ public class Sessao {
 	@ManyToOne
 	private Sala sala;
 	private LocalTime horario;
+	private BigDecimal preco = BigDecimal.ZERO;
 
-	// Design Pattern JavaBean 
-	//(Método Sem argumentos, Getters e Setters para atributos privados)
+	// Design Pattern JavaBean
+	// (Método Sem argumentos, Getters e Setters para atributos privados)
 
-	// Anotação para deixar o construtor obsoleto (informar ao programador para não utilizar o método)
+	// Anotação para deixar o construtor obsoleto (informar ao programador para não
+	// utilizar o método)
 	/**
 	 * @deprecated Só existe devido o Hibernate
 	 */
 	public Sessao() {
-
 	}
 
 	public Sessao(Filme filme, Sala sala, LocalTime horario) {
@@ -36,6 +38,7 @@ public class Sessao {
 		this.filme = filme;
 		this.sala = sala;
 		this.horario = horario;
+		this.preco = sala.getPreco().add(filme.getPreco());
 	}
 
 	public LocalTime getHorarioTermino() {
@@ -72,6 +75,14 @@ public class Sessao {
 
 	public void setHorario(LocalTime horario) {
 		this.horario = horario;
+	}
+
+	public BigDecimal getPreco() {
+		return preco.setScale(2, RoundingMode.HALF_UP);
+	}
+
+	public void setPreco(BigDecimal preco) {
+		this.preco = preco;
 	}
 
 }
