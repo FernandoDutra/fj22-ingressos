@@ -20,6 +20,7 @@ import br.com.caelum.ingresso.model.Filme;
 import br.com.caelum.ingresso.model.Sala;
 import br.com.caelum.ingresso.model.Sessao;
 import br.com.caelum.ingresso.model.form.SessaoForm;
+import br.com.caelum.ingresso.validacao.GerenciadorDeSessao;
 
 @Controller
 public class SessaoController {
@@ -46,21 +47,26 @@ public class SessaoController {
 
 		return mav;
 	}
-	
+
 	@PostMapping("admin/sessao")
 	@Transactional
 	public ModelAndView salva(@Valid SessaoForm sessaoForm, BindingResult result) {
 		if (result.hasErrors()) {
 			return form(sessaoForm.getSalaId(), sessaoForm);
 		}
-		
-		Sessao sessao = sessaoForm.toSessao(salaDao, filmeDao);
-		sessaoDao.save(sessao);
-		
-		// vai para a lista de sessões
-		ModelAndView mav = new ModelAndView("redirect:/admin/sala/" + sessao.getSala().getId() + "/sessoes");
 
-		return mav;
+		Sessao sessao = sessaoForm.toSessao(salaDao, filmeDao);
+
+		List<Sessao> sessaoDaSala = sessaoDao.findAllBySala(sessao.getSala());
+
+		GerenciadorDeSessao gerenciadorDeSessao = new GerenciadorDeSessao(sessaoDaSala);
+
+		if (gerenciadorDeSessao.cabe(sessao)) {
+			sessaoDao.save(sessao);
+			return new ModelAndView("redirect:/admin/sala/" + sessao.getSala().getId() + "/sessoes");
+		}
+
+		return form(sessaoForm.getSalaId(), sessaoForm);
 	}
 
 }
