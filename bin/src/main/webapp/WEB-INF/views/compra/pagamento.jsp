@@ -37,7 +37,7 @@
 
                 <tfoot>
                 <td colspan="5" class="text-right"><strong>TOTAL</strong></td>
-                <td><strong>${carrinho.total}</strong></td>
+                <!-- <td><strong>${carrinho.total}</strong></td> -->
                 </tfoot>
 
             </table>
